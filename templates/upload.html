@@ -73,7 +73,7 @@
             formData.append('file', fileInput.files[0]);
 
             try {
-				const response = await axios.post("{{ url_for("predict_image") }}", formData, {
+				const response = await axios.post("http://127.0.0.1:3000/predict_image", formData, { // adjust if your flask server is running on different url
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -82,7 +82,11 @@
             } catch (error) {
                 console.error(error);
             }
+
         });
     </script>
+    {%if response%}
+    <div id="prediction">Prediction: {{response}}</div>
+    {%endif%}
 </body>
 </html>

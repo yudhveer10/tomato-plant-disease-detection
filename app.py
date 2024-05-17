@@ -1,6 +1,6 @@
-from flask import Flask, render_template
-import model
-
+from flask import Flask, render_template,request,jsonify
+#import model
+#Load model here
 app = Flask(__name__)
 
 @app.route("/")
@@ -15,11 +15,10 @@ def about():
 def upload():
     return render_template("upload.html")
 
-@app.route("/predict_image", method=["POST"])
+@app.route("/predict_image", methods=["POST"])
 def predict_image():
-    # yaha prediction wala bna lena
-    prediction = "l"
-
-    return prediction
+    if request.method == "POST":
+    # make prediction logic here and 
+        return jsonify({"result": "success"})
 
 app.run(debug=True, port=3000)
