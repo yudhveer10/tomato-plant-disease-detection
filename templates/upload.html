@@ -57,36 +57,37 @@
     <div class="container">
         <h1>Upload Tomato Plant Image</h1>
         <form id="uploadForm" enctype="multipart/form-data">
-            <input type="file" name="file" id="fileInput">
+            <input type="file" name="file" id="fileInput" accept="image/*" required>
             <button type="submit">Upload</button>
         </form>
         <div id="prediction"></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
     <script>
         document.getElementById('uploadForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
             const formData = new FormData();
             const fileInput = document.getElementById('fileInput');
-            formData.append('file', fileInput.files[0]);
+            formData.append('image', fileInput.files[0]);
 
             try {
-				const response = await axios.post("http://127.0.0.1:3000/predict_image", formData, { // adjust if your flask server is running on different url
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
+                const response = await fetch("http://192.168.29.178:3000/predict_image", {
+                    method: 'POST',
+                    body: formData,
                 });
-                document.getElementById('prediction').innerText = `Prediction: ${response.data.prediction}`;
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log(data);
+                document.getElementById('prediction').innerText = `Prediction: ${data.result}`;
             } catch (error) {
-                console.error(error);
+                console.error('Error:', error);
+                document.getElementById('prediction').innerText = 'Error occurred during prediction.';
             }
-
         });
     </script>
-    {%if response%}
-    <div id="prediction">Prediction: {{response}}</div>
-    {%endif%}
 </body>
 </html>
